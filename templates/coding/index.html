@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Coding Arena - PlacementAI{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Placement Coding Arena</h3>
+            <p class="text-secondary small mb-0">Solve curated campus recruitment coding problems with in-platform code execution and automated test case evaluation</p>
+        </div>
+        <div>
+            <span class="badge bg-success-subtle text-success fs-6 px-3 py-2">
+                <i class="bi bi-check-circle-fill me-1"></i> {{ user_solved_ids | length }} / {{ problems | length }} Solved
+            </span>
+        </div>
+    </div>
+
+    <!-- Filters Row -->
+    <div class="card mb-4 bg-light border">
+        <div class="card-body py-3">
+            <form method="GET" action="{{ url_for('coding.index') }}" class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <label class="fw-semibold small">Category:</label>
+                </div>
+                <div class="col-auto">
+                    <select name="category" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="all" {% if selected_cat == 'all' %}selected{% endif %}>All Categories</option>
+                        <option value="Arrays" {% if selected_cat == 'Arrays' %}selected{% endif %}>Arrays</option>
+                        <option value="Strings" {% if selected_cat == 'Strings' %}selected{% endif %}>Strings</option>
+                        <option value="Dynamic Programming" {% if selected_cat == 'Dynamic Programming' %}selected{% endif %}>Dynamic Programming</option>
+                        <option value="Searching & Sorting" {% if selected_cat == 'Searching & Sorting' %}selected{% endif %}>Searching & Sorting</option>
+                    </select>
+                </div>
+
+                <div class="col-auto">
+                    <label class="fw-semibold small">Difficulty:</label>
+                </div>
+                <div class="col-auto">
+                    <select name="difficulty" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="all" {% if selected_diff == 'all' %}selected{% endif %}>All Difficulties</option>
+                        <option value="easy" {% if selected_diff == 'easy' %}selected{% endif %}>Easy</option>
+                        <option value="medium" {% if selected_diff == 'medium' %}selected{% endif %}>Medium</option>
+                        <option value="hard" {% if selected_diff == 'hard' %}selected{% endif %}>Hard</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Problems Table -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light small">
+                        <tr>
+                            <th style="width: 80px;">Status</th>
+                            <th>Problem Title</th>
+                            <th>Category</th>
+                            <th>Difficulty</th>
+                            <th>Sample I/O</th>
+                            <th style="width: 140px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if problems %}
+                            {% for p in problems %}
+                            <tr>
+                                <td>
+                                    {% if p.id in user_solved_ids %}
+                                    <i class="bi bi-check-circle-fill text-success fs-5" title="Solved"></i>
+                                    {% else %}
+                                    <i class="bi bi-circle text-muted fs-5" title="Unsolved"></i>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('coding.problem_detail', slug=p.slug) }}" class="fw-bold text-decoration-none text-dark">
+                                        {{ p.title }}
+                                    </a>
+                                </td>
+                                <td><span class="badge bg-light text-dark border">{{ p.category }}</span></td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if p.difficulty == 'easy' else ('warning' if p.difficulty == 'medium' else 'danger') }}">
+                                        {{ p.difficulty | capitalize }}
+                                    </span>
+                                </td>
+                                <td><code class="small">{{ p.sample_input }} &rarr; {{ p.sample_output }}</code></td>
+                                <td>
+                                    <a href="{{ url_for('coding.problem_detail', slug=p.slug) }}" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-code me-1"></i> Solve
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">No problems found for this filter.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

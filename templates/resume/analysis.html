@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Resume Analysis Report - {{ analysis.target_role }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+    <!-- Header Banner -->
+    <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-body p-4">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8">
+                    <span class="badge bg-warning-subtle text-dark mb-2">AI Resume & ATS Screening Report</span>
+                    <h3 class="fw-bold mb-1"><i class="bi bi-file-earmark-text text-primary me-2"></i>{{ analysis.original_filename }}</h3>
+                    <p class="text-secondary small mb-3">Evaluated for Target Role: <strong>{{ analysis.target_role }}</strong> &bull; {{ analysis.created_at.strftime('%B %d, %Y') if analysis.created_at else 'Today' }}</p>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="{{ url_for('resume.upload') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-upload me-1"></i> Upload Updated Resume
+                        </a>
+                        <a href="{{ url_for('resume.index') }}" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-arrow-left me-1"></i> All Reports
+                        </a>
+                        <a href="{{ url_for('student.dashboard') }}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 text-center">
+                    <div class="p-3 bg-light rounded-3 border">
+                        <small class="text-muted text-uppercase fw-semibold">ATS Compatibility Score</small>
+                        <h1 class="fw-bold my-1 text-{{ 'success' if analysis.ats_score >= 75 else ('warning' if analysis.ats_score >= 50 else 'danger') }}">
+                            {{ analysis.ats_score }}%
+                        </h1>
+                        <span class="badge bg-{{ 'success' if analysis.ats_score >= 75 else ('warning text-dark' if analysis.ats_score >= 50 else 'danger') }} fs-6">
+                            {% if analysis.ats_score >= 75 %}High Match &bull; Placement Ready{% elif analysis.ats_score >= 50 %}Moderate Match &bull; Needs Tweaks{% else %}Low Match &bull; Significant Skill Gaps{% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2 Column Analytics -->
+    <div class="row g-4 mb-4">
+        <!-- Skills Analysis Column -->
+        <div class="col-lg-7">
+            <!-- Detected Skills Card -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0 text-success"><i class="bi bi-check2-circle me-2"></i>Matched & Detected Technical Skills ({{ matched_skills | length }})</h5>
+                </div>
+                <div class="card-body">
+                    {% if matched_skills %}
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for skill in matched_skills %}
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fs-6">
+                                <i class="bi bi-check-lg me-1"></i> {{ skill | upper }}
+                            </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">No standard technical keywords were detected in the uploaded file.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Missing Skills Card -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0 text-danger"><i class="bi bi-exclamation-octagon me-2"></i>Critical Missing Skills for {{ analysis.target_role }} ({{ missing_skills | length }})</h5>
+                </div>
+                <div class="card-body">
+                    {% if missing_skills %}
+                        <p class="small text-secondary mb-3">Recruiters filter for these competencies in ATS algorithms for {{ analysis.target_role }} roles. Adding experience with these tools will boost your shortlist chances:</p>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for skill in missing_skills %}
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 fs-6">
+                                <i class="bi bi-plus-lg me-1"></i> {{ skill | title }}
+                            </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-success mb-0"><i class="bi bi-check-circle-fill me-1"></i> Outstanding! Your resume covers all core required skills for this role.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Checklist & Recommendations Column -->
+        <div class="col-lg-5">
+            <!-- Sections Audit -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-layout-text-sidebar-reverse me-2 text-primary"></i>Resume Section Audit</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for sec_name, detected in sections.items() %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <span class="fw-medium">{{ sec_name.replace('_', ' ') | title }}</span>
+                            {% if detected %}
+                            <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> Detected</span>
+                            {% else %}
+                            <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i> Missing</span>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Actionable Recommendations -->
+            <div class="card shadow-sm border-warning">
+                <div class="card-header bg-white py-3 text-warning fw-bold">
+                    <i class="bi bi-lightning-charge-fill me-1"></i> Actionable Improvement Plan
+                </div>
+                <div class="card-body">
+                    {% if feedback.improvements %}
+                        <ul class="mb-0 ps-3">
+                            {% for imp in feedback.improvements %}
+                            <li class="mb-2 text-dark small fw-medium">{{ imp }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted small mb-0">Your resume formatting and content structure are excellent.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,182 +1,92 @@
 # AI Placement Preparation Platform
 
-A comprehensive web-based platform that helps students prepare for campus placements using AI-powered tools — including aptitude and technical practice tests, coding challenges, mock interviews, resume analysis, and personalized learning recommendations.
+A comprehensive web-based platform that helps students prepare for campus placements using AI-powered tools — including aptitude and technical practice tests, coding challenges with automated evaluation, AI mock interviews, resume ATS analysis, and personalized learning recommendations.
 
-<<<<<<< HEAD
-Fully implemented: auto-creates its SQLite tables and seeds demo content on first run. Run `python app.py` to start.
-=======
-> **Note:** The project skeleton (directory structure, blueprints, templates, and models) is in place. Source files are currently stubs and are being implemented incrementally.
->>>>>>> f09361001880439e02b4f99e98d1dff6a5b8608d
+Academic Year: **2025–2026**
 
-## ✨ Features
+---
 
-### 🎯 Practice & Assessment
-- **Aptitude Tests** — practice and timed mock tests for quantitative, logical, and verbal reasoning
-- **Technical Tests** — subject-wise technical practice (Core CS / programming fundamentals)
-- **Coding Challenges** — problem-solving with an in-platform code editor and result evaluation
-- **Mock Tests** — full-length placement mock tests that mirror real campus recruitment pattern
+## 👥 Team & Module Distribution
 
-### 🤖 AI-Powered Modules
-- **Mock Interviews** — AI-driven mock interviews with HR and technical round simulations
-- **Resume Analyzer** — upload your resume and get AI-based scoring and improvement suggestions
-- **Performance Analysis** — track strengths, weaknesses, and accuracy over time
-- **Recommendation Engine** — personalized study/test recommendations based on performance
+| Member | Primary Role | Implemented Modules |
+| :--- | :--- | :--- |
+| **Member 1: Aditya Madne** | Authentication & Student Portal | Registration, Secure Login, Student Profile, Student Dashboard |
+| **Member 2: Om Badhe** | AI Resume Analyzer | Document Text Extraction (PDF/DOCX/TXT), Skill Gap Analysis, ATS Scoring |
+| **Member 3: Radha Ghogare** | AI Mock Interview | Technical & HR Rounds, Speech-to-Text Input, Real-time AI Scoring & Feedback |
+| **Member 4: Shubham Dighe** | Coding & Assessments | Quantitative, Logical & Verbal Aptitude, In-Platform Python Code Runner & Test Cases |
+| **Member 5: Aditya Kshirsagar** | Performance & Recommendations | Multi-domain Performance Analytics, Competency Radar, ML-based Action Recommendations |
 
-### 👥 Roles & Modules
-- **Student Dashboard** — progress tracking, results history, and profile management
-- **Admin Panel** — manage students, questions, categories, tests, and results
+---
+
+## ✨ Features & Modules
+
+### 1. 🎯 Practice & Assessments
+- **Aptitude Tests:** Quantitative Aptitude, Logical Reasoning, and Verbal Ability practice sets and timed tests.
+- **Technical Tests:** Core Computer Science quizzes covering Data Structures & Algorithms, DBMS, Operating Systems, and Computer Networks.
+- **Placement Mock Tests:** Timed, full-length placement simulations (mirroring TCS, Infosys, and standard recruitment patterns) with auto-submission and question palettes.
+
+### 2. 💻 Coding Arena
+- In-browser code editor with Python 3 execution.
+- Sample and hidden test case evaluation with runtime execution metrics.
+- Submissions history and problem-solving badges.
+
+### 3. 🤖 AI-Powered Modules
+- **AI Resume Analyzer:** Extracts text from PDF, Word (.docx), and plain text; matches against job-role benchmarks; checks essential sections; calculates an ATS score; and generates targeted improvement suggestions.
+- **AI Mock Interview Simulator:** Interactive multi-turn interview sessions for Technical and HR rounds with Web Speech API audio input, scoring on technical depth, clarity, and model ideal answers.
+- **AI Performance & Recommendation Engine:** Computes subject-wise accuracy, calculates a Placement Readiness Score, identifies strengths and weak areas, and generates prioritized next steps.
+
+### 4. 🛡️ Admin Management Panel
+- View all registered student profiles.
+- Manage question bank (add/delete aptitude and technical MCQs).
+- Create and toggle timed tests.
+- View system-wide test results and performance logs.
+
+---
 
 ## 🛠️ Tech Stack
 
-| Layer      | Technology                                            |
-|------------|-------------------------------------------------------|
-| Backend    | Python 3, Flask (Blueprints)                          |
-| Frontend   | HTML, CSS, JavaScript, Jinja2 Templates               |
-| Database   | SQL (schema in `database/schema.sql`, seed in `database/seed.sql`) |
-| AI/ML      | Python AI modules for interviews, resume, analysis, recommendation |
-| Testing    | Pytest (`tests/`)                                     |
+- **Backend:** Python 3.10+, Flask 3.x, Flask-Login, Flask-SQLAlchemy, Werkzeug
+- **Frontend:** HTML5, CSS3, JavaScript (ES6+), Bootstrap 5.3, Bootstrap Icons, Chart.js
+- **Database:** SQLite (default zero-configuration) / MySQL support
+- **Testing:** Pytest
 
-## 📁 Project Structure
+---
 
-```
-├── app.py                      # Flask application entry point
-├── config.py                   # Application configuration
-├── requirements.txt            # Python dependencies
-├── .env                        # Environment variables (secrets, DB config)
-│
-├── ai/                         # AI-powered modules
-│   ├── mock_interview.py       # AI mock interview engine
-│   ├── resume_analyzer.py      # Resume parsing & scoring
-│   ├── performance_analysis.py # Performance & progress analytics
-│   └── recommendation_engine.py# Personalized recommendations
-│
-├── database/
-│   ├── schema.sql              # Database schema
-│   └── seed.sql                # Seed/demo data
-│
-├── models/                     # Data models
-│   ├── user.py  test.py  question.py  coding.py
-│   ├── interview.py  resume.py  result.py  progress.py
-│   └── recommendation.py
-│
-├── routes/                     # Flask blueprints (URL routes)
-│   ├── auth_routes.py          # Login / registration
-│   ├── student_routes.py       # Student dashboard, profile, progress
-│   ├── aptitude_routes.py      # Aptitude practice & tests
-│   ├── technical_routes.py     # Technical practice & tests
-│   ├── coding_routes.py        # Coding challenges
-│   ├── mock_test_routes.py     # Mock placement tests
-│   ├── interview_routes.py     # AI mock interviews
-│   ├── resume_routes.py        # Resume upload & analysis
-│   ├── recommendation_routes.py# Recommendations
-│   └── admin_routes.py         # Admin management
-│
-├── static/                     # Static assets
-│   ├── css/  (style, dashboard, responsive)
-│   ├── js/   (main, test, coding, interview)
-│   └── images/
-│
-├── templates/                  # Jinja2 HTML templates
-│   ├── base.html  index.html
-│   ├── auth/      student/    admin/
-│   ├── aptitude/  technical/  coding/
-│   ├── mock_test/ interview/  resume/  recommendation/
-│   └── ...
-│
-└── tests/                      # Pytest test suites
-    ├── test_auth.py  test_aptitude.py
-    ├── test_coding.py test_mock_test.py
-```
+## 🚀 Quick Start Guide
 
-## 🚀 Getting Started
-
-### 1. Prerequisites
-- Python 3.8+
-- pip
-- A SQL database (MySQL / PostgreSQL / SQLite)
-
-### 2. Clone & Setup
+### 1. Clone & Navigate
 ```bash
-git clone https://github.com/<your-org>/AI-PLACEMENT-PREPRATION-PLADFORM.git
+git clone https://github.com/<your-username>/AI-PLACEMENT-PREPRATION-PLADFORM.git
 cd AI-PLACEMENT-PREPRATION-PLADFORM
 ```
 
-### 3. Create a Virtual Environment
-```bash
-# Windows
-python -m venv venv
-venv\Scripts\activate
-
-# Linux / macOS
-python3 -m venv venv
-source venv/bin/activate
-```
-
-### 4. Install Dependencies
+### 2. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Configure Environment
-Copy the variables below into `.env` and fill in your values:
-
-```env
-SECRET_KEY=your-secret-key
-DATABASE_URL=your-database-connection-string
-# Add any API keys required by the AI modules (e.g., LLM/OpenAI key)
-AI_API_KEY=your-ai-api-key
-```
-
-Configuration options live in `config.py`.
-
-### 6. Initialize the Database
-```bash
-# Apply schema
-mysql -u <user> -p <database> < database/schema.sql
-
-# (Optional) Load seed/demo data
-mysql -u <user> -p <database> < database/seed.sql
-```
-
-### 7. Run the Application
+### 3. Run Application
 ```bash
 python app.py
 ```
+*The database (`placement.db`) and seed data are automatically initialized on startup.*
 
-Then open your browser and visit **http://localhost:5000**.
+Open your browser and navigate to: `http://127.0.0.1:5000`
 
-## 🧪 Running Tests
+---
+
+## 🔑 Default Demo Credentials
+
+| Role | Email Address | Password |
+| :--- | :--- | :--- |
+| **Demo Student** | `student@placement.edu` | `Student@123` |
+| **Placement Admin** | `admin@placement.edu` | `Admin@123` |
+
+---
+
+## 🧪 Running Unit Tests
+
+Run test suites using `pytest`:
 ```bash
-pytest tests/ -v
+pytest
 ```
-
-## 🔑 Default Access
-- **Admin:** created/configured via the admin seed in `database/seed.sql`
-- **Student:** register through the public registration page (`/register`)
-
-## 📌 Roadmap
-<<<<<<< HEAD
-- [x] Backend routes & API endpoints
-- [x] Database schema & models implementation
-- [x] AI module integrations
-- [x] UI templates & styling
-- [x] Test suites & CI
-- [ ] Optional: connect AI modules to an external LLM API for richer feedback
-- [ ] Optional: expand question bank & coding judge with more test cases
-=======
-- [ ] Backend routes & API endpoints
-- [ ] Database schema & models implementation
-- [ ] AI module integrations
-- [ ] UI templates & styling
-- [ ] Test suites & CI
->>>>>>> f09361001880439e02b4f99e98d1dff6a5b8608d
-
-## 🤝 Contributing
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m 'Add feature'`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request
-
-## 📄 License
-This project is for educational use. Add an appropriate license before public distribution.

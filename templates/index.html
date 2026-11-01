@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}AI Placement Preparation Platform - Smart Campus Placement Prep{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="py-5 bg-white border-bottom">
+    <div class="container py-lg-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <span class="badge bg-primary-subtle text-primary fw-semibold px-3 py-2 rounded-pill mb-3">
+                    <i class="bi bi-stars me-1"></i> AI-Powered Campus Recruitment Preparation
+                </span>
+                <h1 class="display-4 fw-bold text-dark lh-sm mb-3">
+                    Ace Your Campus Placements with <span class="text-primary">Personalized AI Mentorship</span>
+                </h1>
+                <p class="lead text-secondary mb-4">
+                    A centralized preparation environment combining aptitude practice, technical drills, in-browser coding challenges, AI mock interviews, and resume ATS scoring.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg px-4">
+                        <i class="bi bi-rocket-takeoff me-1"></i> Start Preparing Free
+                    </a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary btn-lg px-4">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Student Login
+                    </a>
+                </div>
+
+                <!-- Demo quick access badge -->
+                <div class="mt-4 p-3 bg-light rounded-3 border">
+                    <span class="fw-semibold text-dark"><i class="bi bi-key-fill text-warning me-1"></i> Quick Demo Credentials:</span>
+                    <div class="row mt-2 g-2 small">
+                        <div class="col-md-6">
+                            <strong>Demo Student:</strong> <code>student@placement.edu</code> / <code>Student@123</code>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Admin Officer:</strong> <code>admin@placement.edu</code> / <code>Admin@123</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                    <div class="card-header bg-dark text-white p-3 d-flex align-items-center justify-content-between">
+                        <span class="fw-bold"><i class="bi bi-cpu-fill text-primary me-2"></i>Preparation Ecosystem</span>
+                        <span class="badge bg-success">Live Ready</span>
+                    </div>
+                    <div class="card-body p-4 bg-light">
+                        <div class="d-flex align-items-center gap-3 p-3 bg-white rounded-3 mb-3 border">
+                            <i class="bi bi-calculator-fill fs-2 text-primary"></i>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Aptitude & Reasoning</h6>
+                                <small class="text-muted">Quantitative, Logical & Verbal Practice Sets</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3 p-3 bg-white rounded-3 mb-3 border">
+                            <i class="bi bi-code-square fs-2 text-success"></i>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Live Coding Challenges</h6>
+                                <small class="text-muted">In-browser code editor & test case evaluation</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3 p-3 bg-white rounded-3 mb-3 border">
+                            <i class="bi bi-file-earmark-check-fill fs-2 text-warning"></i>
+                            <div>
+                                <h6 class="mb-0 fw-bold">AI Resume ATS Analyzer</h6>
+                                <small class="text-muted">PDF/DOCX parsing & target role skill gap analysis</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3 p-3 bg-white rounded-3 border">
+                            <i class="bi bi-robot fs-2 text-danger"></i>
+                            <div>
+                                <h6 class="mb-0 fw-bold">AI Mock Interviews</h6>
+                                <small class="text-muted">HR & Technical simulations with voice & score feedback</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modules Overview -->
+<section class="py-5">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Comprehensive Preparation Modules</h2>
+            <p class="text-secondary">Everything required to successfully clear campus selection rounds from Day 1.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 p-4">
+                    <div class="stat-icon bg-primary text-white mb-3">
+                        <i class="bi bi-calculator"></i>
+                    </div>
+                    <h5 class="fw-bold">Aptitude & Reasoning</h5>
+                    <p class="text-secondary small">Master Quantitative Aptitude (Time-Work, Percentages, Speed), Logical Reasoning series, and Verbal sentence correction with step-by-step explanations.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 p-4">
+                    <div class="stat-icon bg-success text-white mb-3">
+                        <i class="bi bi-hdd-network"></i>
+                    </div>
+                    <h5 class="fw-bold">Technical Core CS</h5>
+                    <p class="text-secondary small">Prepare for technical MCQs across Data Structures & Algorithms, DBMS, Operating Systems, Computer Networks, and OOP concepts tested by recruitment teams.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 p-4">
+                    <div class="stat-icon bg-info text-white mb-3">
+                        <i class="bi bi-terminal-fill"></i>
+                    </div>
+                    <h5 class="fw-bold">Coding Arena</h5>
+                    <p class="text-secondary small">Solve placement programming questions directly in the browser with automated test case validation (sample and hidden test cases) and time complexity analysis.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 p-4">
+                    <div class="stat-icon bg-warning text-white mb-3">
+                        <i class="bi bi-file-earmark-diff"></i>
+                    </div>
+                    <h5 class="fw-bold">AI Resume Analyzer</h5>
+                    <p class="text-secondary small">Upload your resume to receive instant ATS compatibility score, detect matched and missing keywords for your target role, and get section-wise recommendations.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 p-4">
+                    <div class="stat-icon bg-danger text-white mb-3">
+                        <i class="bi bi-mic"></i>
+                    </div>
+                    <h5 class="fw-bold">AI Mock Interview</h5>
+                    <p class="text-secondary small">Practice multi-turn Technical and HR rounds with speech input. Receive real-time AI scoring on conceptual depth, clarity, and model ideal answers.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 p-4">
+                    <div class="stat-icon bg-dark text-white mb-3">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <h5 class="fw-bold">AI Recommendations</h5>
+                    <p class="text-secondary small">Identifies individual strengths and weak areas dynamically, recommending customized tests, practice topics, and next steps to guarantee placement readiness.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

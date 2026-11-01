@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Submission Result - {{ problem.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Submission Result: {{ problem.title }}</h4>
+            <p class="text-secondary small mb-0">Evaluated on {{ submission.submitted_at.strftime('%B %d, %Y at %I:%M %p') if submission.submitted_at else 'Today' }}</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('coding.problem_detail', slug=problem.slug) }}" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-arrow-repeat me-1"></i> Try Again
+            </a>
+            <a href="{{ url_for('coding.index') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-grid me-1"></i> Problem List
+            </a>
+        </div>
+    </div>
+
+    <!-- Status Overview Card -->
+    <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-body p-4">
+            <div class="row align-items-center g-4">
+                <div class="col-md-4 text-center border-end">
+                    <small class="text-muted text-uppercase fw-semibold">Verdict</small>
+                    <h2 class="fw-bold my-1 text-{{ 'success' if submission.status == 'Accepted' else ('danger' if submission.status == 'Wrong Answer' else 'warning') }}">
+                        {{ submission.status }}
+                    </h2>
+                    <span class="badge bg-light text-dark border">Language: {{ submission.language | capitalize }}</span>
+                </div>
+                <div class="col-md-4 text-center border-end">
+                    <small class="text-muted text-uppercase fw-semibold">Test Cases Passed</small>
+                    <h2 class="fw-bold my-1 text-primary">{{ submission.passed_tests }} / {{ submission.total_tests }}</h2>
+                    <span class="fw-semibold text-secondary">Score: {{ submission.score }}%</span>
+                </div>
+                <div class="col-md-4 text-center">
+                    <small class="text-muted text-uppercase fw-semibold">Average Runtime</small>
+                    <h2 class="fw-bold my-1 text-info">{{ submission.execution_time_ms }} ms</h2>
+                    <span class="small text-muted">Python subprocess</span>
+                </div>
+            </div>
+
+            {% if submission.error_message %}
+            <div class="alert alert-danger mt-4 mb-0 py-2">
+                <strong>Error Details:</strong>
+                <pre class="mb-0 text-danger mt-1 small" style="white-space: pre-wrap;">{{ submission.error_message }}</pre>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Submitted Code Card -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-dark text-white py-2 d-flex justify-content-between align-items-center">
+            <span class="small fw-semibold"><i class="bi bi-code me-1"></i> Submitted Code</span>
+            <span class="badge bg-secondary small">{{ submission.language }}</span>
+        </div>
+        <div class="card-body p-0">
+            <pre class="m-0 p-3 bg-dark text-light font-monospace small" style="border-radius: 0 0 12px 12px; overflow-x: auto;"><code>{{ submission.code }}</code></pre>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}HR Mock Interview - Question {{ question_num }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <!-- Header Progress -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <span class="badge bg-success text-uppercase">HR & Behavioral Round</span>
+                    <h5 class="fw-bold mb-0 mt-1">Campus Placement HR Simulator</h5>
+                </div>
+                <div class="text-end">
+                    <span class="badge bg-secondary">Question {{ question_num }} of {{ total_questions }}</span>
+                </div>
+            </div>
+
+            <div class="progress mb-4" style="height: 6px;">
+                <div class="progress-bar bg-success" style="width: {{ (question_num / total_questions) * 100 }}%;"></div>
+            </div>
+
+            <!-- Chat Transcript Box -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white py-2 d-flex align-items-center justify-content-between">
+                    <span class="small fw-semibold"><i class="bi bi-person-badge text-success me-1"></i> HR Interviewer</span>
+                    <span class="badge bg-success-subtle text-success small">Session Active</span>
+                </div>
+                <div class="card-body chat-container bg-light" style="min-height: 280px; max-height: 400px;">
+                    {% for msg in messages %}
+                        {% if msg.role == 'interviewer' %}
+                        <div class="d-flex gap-2 mb-3">
+                            <div class="stat-icon bg-success text-white" style="width: 32px; height: 32px; font-size: 1rem;">
+                                <i class="bi bi-person-video3"></i>
+                            </div>
+                            <div class="chat-bubble interviewer shadow-sm">
+                                <p class="mb-0">{{ msg.content }}</p>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="d-flex gap-2 justify-content-end mb-3">
+                            <div class="chat-bubble candidate shadow-sm" style="background-color: #10b981;">
+                                <p class="mb-1">{{ msg.content }}</p>
+                                {% if msg.feedback %}
+                                <div class="mt-2 pt-2 border-top border-white border-opacity-25 small">
+                                    <span class="badge bg-white text-dark me-1">Score: {{ msg.feedback.score }}%</span>
+                                    <span>{{ msg.feedback.feedback }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="stat-icon bg-secondary text-white" style="width: 32px; height: 32px; font-size: 1rem;">
+                                <i class="bi bi-person"></i>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Response Form -->
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('interview.submit_answer', session_id=session.id) }}">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label for="interview-answer-input" class="form-label fw-bold mb-0">Your Response:</label>
+                            <div class="d-flex align-items-center gap-2">
+                                <span id="word-count-span" class="small text-muted">0 words</span>
+                                <button type="button" class="btn btn-sm btn-outline-danger" id="speech-mic-btn">
+                                    <i class="bi bi-mic me-1"></i> Speak Answer
+                                </button>
+                            </div>
+                        </div>
+
+                        <textarea id="interview-answer-input" name="answer" class="form-control mb-3" rows="5" placeholder="Formulate your response using the STAR method: Situation, Task, Action, and Result..." required autofocus></textarea>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted"><i class="bi bi-star me-1"></i> Tip: Use authentic experiences and highlight collaborative problem solving.</small>
+                            <button type="submit" class="btn btn-success px-4 fw-semibold">
+                                Submit & Next Question <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/interview.js') }}"></script>
+{% endblock %}

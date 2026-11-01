@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Test History & Submissions - PlacementAI{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Assessment History & Submissions</h3>
+            <p class="text-secondary small mb-0">Review all your past test attempts, test case logs, and score breakdowns</p>
+        </div>
+        <a href="{{ url_for('student.dashboard') }}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Dashboard
+        </a>
+    </div>
+
+    <!-- Assessments Tab -->
+    <ul class="nav nav-pills mb-3" id="resultsTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="tests-tab" data-bs-toggle="pill" data-bs-target="#tests-pane" type="button" role="tab">
+                <i class="bi bi-card-checklist me-1"></i> Practice & Mock Tests ({{ results | length }})
+            </button>
+        </li>
+        <li class="nav-item ms-2" role="presentation">
+            <button class="nav-link" id="coding-tab" data-bs-toggle="pill" data-bs-target="#coding-pane" type="button" role="tab">
+                <i class="bi bi-code-slash me-1"></i> Coding Submissions ({{ coding_submissions | length }})
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="resultsTabContent">
+        <div class="tab-pane fade show active" id="tests-pane" role="tabpanel">
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light small">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Assessment Title</th>
+                                    <th>Category</th>
+                                    <th>Score</th>
+                                    <th>Questions (Correct/Total)</th>
+                                    <th>Result</th>
+                                    <th>Review</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if results %}
+                                    {% for r in results %}
+                                    <tr>
+                                        <td>{{ r.completed_at.strftime('%Y-%m-%d %H:%M') if r.completed_at else 'Recent' }}</td>
+                                        <td><strong>{{ r.test.title if r.test else 'Placement Test' }}</strong></td>
+                                        <td><span class="badge bg-light text-dark border">{{ r.category }}</span></td>
+                                        <td><strong>{{ r.score }}</strong> / {{ r.total_marks }} ({{ r.percentage }}%)</td>
+                                        <td>{{ r.correct_answers }} / {{ r.total_questions }}</td>
+                                        <td>
+                                            {% if r.passed %}
+                                            <span class="badge bg-success">Passed</span>
+                                            {% else %}
+                                            <span class="badge bg-danger">Failed</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{{ url_for('aptitude.result_view' if r.category == 'aptitude' else ('technical.result_view' if r.category == 'technical' else 'mock_test.result_view'), result_id=r.id) }}" class="btn btn-sm btn-outline-primary">
+                                                Review Answers
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="7" class="text-center py-4 text-muted">No test results recorded yet.</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="coding-pane" role="tabpanel">
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light small">
+                                <tr>
+                                    <th>Submitted Date</th>
+                                    <th>Problem Name</th>
+                                    <th>Language</th>
+                                    <th>Status</th>
+                                    <th>Score</th>
+                                    <th>Passed Cases</th>
+                                    <th>Runtime</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if coding_submissions %}
+                                    {% for c in coding_submissions %}
+                                    <tr>
+                                        <td>{{ c.submitted_at.strftime('%Y-%m-%d %H:%M') if c.submitted_at else 'Recent' }}</td>
+                                        <td><strong>{{ c.problem.title if c.problem else 'Coding Challenge' }}</strong></td>
+                                        <td><code>{{ c.language }}</code></td>
+                                        <td>
+                                            <span class="badge bg-{{ 'success' if c.status == 'Accepted' else ('danger' if c.status == 'Wrong Answer' else 'warning') }}">
+                                                {{ c.status }}
+                                            </span>
+                                        </td>
+                                        <td><strong>{{ c.score }}%</strong></td>
+                                        <td>{{ c.passed_tests }} / {{ c.total_tests }}</td>
+                                        <td>{{ c.execution_time_ms }} ms</td>
+                                        <td>
+                                            <a href="{{ url_for('coding.submission_result', submission_id=c.id) }}" class="btn btn-sm btn-outline-primary">
+                                                View Code
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="8" class="text-center py-4 text-muted">No coding solutions submitted yet.</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

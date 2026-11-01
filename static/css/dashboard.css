@@ -1,0 +1,61 @@
+/* Dashboard specific styling */
+.dashboard-hero {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: #ffffff;
+    border-radius: 16px;
+    padding: 2.2rem;
+    margin-bottom: 2rem;
+}
+
+.dashboard-hero h2 {
+    font-weight: 700;
+}
+
+.readiness-gauge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.readiness-score {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.recommendation-card {
+    border-left: 4px solid var(--primary-color);
+    transition: transform 0.2s;
+}
+
+.recommendation-card.priority-high {
+    border-left-color: #ef4444;
+}
+
+.recommendation-card.priority-medium {
+    border-left-color: #f59e0b;
+}
+
+.recommendation-card.priority-low {
+    border-left-color: #10b981;
+}
+
+.recommendation-card:hover {
+    transform: translateX(4px);
+}
+
+.metric-pill {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}

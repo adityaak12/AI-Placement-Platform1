@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}All Student Results - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Student Results & Assessment Logs</h3>
+            <p class="text-secondary small mb-0">Review scores, accuracy rates, and time taken by candidates across all assessments</p>
+        </div>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Admin Dashboard
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 small">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Date</th>
+                            <th>Candidate</th>
+                            <th>Assessment</th>
+                            <th>Category</th>
+                            <th>Score</th>
+                            <th>Accuracy</th>
+                            <th>Time Spent</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if results %}
+                            {% for r in results %}
+                            <tr>
+                                <td>{{ r.completed_at.strftime('%Y-%m-%d %H:%M') if r.completed_at else 'Recent' }}</td>
+                                <td><strong>{{ r.student.name if r.student else 'Unknown' }}</strong><br><span class="text-muted">{{ r.student.email if r.student else '' }}</span></td>
+                                <td>{{ r.test.title if r.test else 'Placement Test' }}</td>
+                                <td><span class="badge bg-light text-dark border">{{ r.category }}</span></td>
+                                <td><strong>{{ r.score }}</strong> / {{ r.total_marks }}</td>
+                                <td><strong>{{ r.percentage }}%</strong></td>
+                                <td>{{ (r.time_taken_seconds // 60) }}m {{ (r.time_taken_seconds % 60) }}s</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if r.passed else 'danger' }}">
+                                        {{ 'Passed' if r.passed else 'Failed' }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr><td colspan="8" class="text-center py-4 text-muted">No test results recorded yet.</td></tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

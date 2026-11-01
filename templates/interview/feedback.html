@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Interview Evaluation Report - PlacementAI{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+    <!-- Header Card -->
+    <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-body p-4">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8">
+                    <span class="badge bg-{{ 'primary' if session.interview_type == 'technical' else 'success' }}-subtle text-{{ 'primary' if session.interview_type == 'technical' else 'success' }} mb-2 text-uppercase">
+                        {{ session.interview_type }} Round Evaluation
+                    </span>
+                    <h3 class="fw-bold mb-1">Interview Performance Assessment</h3>
+                    <p class="text-secondary small mb-3">Role Target: <strong>{{ session.target_role }}</strong> &bull; Completed on {{ session.completed_at.strftime('%B %d, %Y at %I:%M %p') if session.completed_at else 'Recent' }}</p>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="{{ url_for('interview.index') }}" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-arrow-left me-1"></i> New Interview
+                        </a>
+                        <a href="{{ url_for('student.dashboard') }}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 text-center">
+                    <div class="p-3 bg-light rounded-3 border">
+                        <small class="text-muted text-uppercase fw-semibold">Overall Readiness</small>
+                        <h1 class="fw-bold text-{{ 'success' if session.overall_score >= 70 else ('warning' if session.overall_score >= 50 else 'danger') }} mb-0">
+                            {{ session.overall_score }}%
+                        </h1>
+                        <span class="small fw-semibold text-secondary">
+                            {% if session.overall_score >= 75 %}Strong Placement Prospect{% elif session.overall_score >= 50 %}Good Foundation{% else %}Practice Needed{% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3 Scores Row -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <span class="text-secondary small text-uppercase">Conceptual & Technical Depth</span>
+                <h3 class="fw-bold text-primary my-1">{{ session.technical_score }}%</h3>
+                <small class="text-muted">Domain accuracy & keyword relevance</small>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <span class="text-secondary small text-uppercase">Clarity & Communication</span>
+                <h3 class="fw-bold text-success my-1">{{ session.communication_score }}%</h3>
+                <small class="text-muted">Structure, articulation & length</small>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <span class="text-secondary small text-uppercase">Confidence & Articulation</span>
+                <h3 class="fw-bold text-info my-1">{{ session.confidence_score }}%</h3>
+                <small class="text-muted">Composure & delivery metric</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Strengths & Improvements -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="card h-100 border-success">
+                <div class="card-header bg-white text-success fw-bold">
+                    <i class="bi bi-check-circle-fill me-1"></i> Observed Strengths
+                </div>
+                <div class="card-body">
+                    {% if feedback.strengths %}
+                        <ul class="mb-0">
+                            {% for s in feedback.strengths %}
+                            <li class="mb-2 text-dark">{{ s }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted mb-0">Complete more questions to evaluate specific strengths.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100 border-warning">
+                <div class="card-header bg-white text-warning fw-bold">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i> Recommended Areas to Improve
+                </div>
+                <div class="card-body">
+                    {% if feedback.improvements %}
+                        <ul class="mb-0">
+                            {% for imp in feedback.improvements %}
+                            <li class="mb-2 text-dark">{{ imp }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted mb-0">Solid performance across all questions!</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Complete Transcript Review -->
+    <div class="card">
+        <div class="card-header bg-white py-3">
+            <h5 class="fw-bold mb-0"><i class="bi bi-chat-left-dots text-primary me-2"></i>Full Dialogue Transcript & Evaluation</h5>
+        </div>
+        <div class="card-body">
+            {% for msg in messages %}
+                {% if msg.role == 'interviewer' %}
+                <div class="p-3 mb-2 bg-light rounded-3 border-start border-primary border-4">
+                    <span class="small fw-bold text-primary"><i class="bi bi-robot me-1"></i> Interviewer Question:</span>
+                    <p class="mb-0 fw-medium mt-1">{{ msg.content }}</p>
+                </div>
+                {% else %}
+                <div class="p-3 mb-3 bg-white rounded-3 border border-start border-success border-4">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="small fw-bold text-success"><i class="bi bi-person me-1"></i> Your Response:</span>
+                        {% if msg.feedback %}
+                        <span class="badge bg-success">Score: {{ msg.feedback.score }}%</span>
+                        {% endif %}
+                    </div>
+                    <p class="mb-2 text-dark">{{ msg.content }}</p>
+
+                    {% if msg.feedback %}
+                    <div class="small p-2 bg-light rounded border text-secondary">
+                        <div><strong>Feedback:</strong> {{ msg.feedback.feedback }}</div>
+                        {% if msg.feedback.ideal_answer %}
+                        <div class="mt-1 text-primary"><strong>Model Ideal Answer:</strong> {{ msg.feedback.ideal_answer }}</div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

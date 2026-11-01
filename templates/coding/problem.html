@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}{{ problem.title }} - Coding Arena{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4" id="problem-meta" data-slug="{{ problem.slug }}">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center gap-3">
+            <a href="{{ url_for('coding.index') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left"></i> All Problems
+            </a>
+            <h4 class="fw-bold mb-0">{{ problem.title }}</h4>
+            <span class="badge bg-{{ 'success' if problem.difficulty == 'easy' else ('warning' if problem.difficulty == 'medium' else 'danger') }}">
+                {{ problem.difficulty | capitalize }}
+            </span>
+            <span class="badge bg-light text-dark border">{{ problem.category }}</span>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Problem Description Column -->
+        <div class="col-lg-5">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-white py-2 fw-semibold">
+                    <i class="bi bi-file-text me-1 text-primary"></i> Problem Description
+                </div>
+                <div class="card-body overflow-auto" style="max-height: 700px;">
+                    <div class="problem-statement mb-4" style="white-space: pre-line;">
+                        {{ problem.description }}
+                    </div>
+
+                    {% if problem.input_format %}
+                    <h6 class="fw-bold mb-1 text-secondary small text-uppercase">Input Format</h6>
+                    <pre class="bg-light p-2 rounded small mb-3">{{ problem.input_format }}</pre>
+                    {% endif %}
+
+                    {% if problem.output_format %}
+                    <h6 class="fw-bold mb-1 text-secondary small text-uppercase">Output Format</h6>
+                    <pre class="bg-light p-2 rounded small mb-3">{{ problem.output_format }}</pre>
+                    {% endif %}
+
+                    {% if problem.sample_input and problem.sample_output %}
+                    <div class="card bg-light border mb-3">
+                        <div class="card-body p-3">
+                            <h6 class="fw-bold mb-1 small text-uppercase">Sample Input</h6>
+                            <pre class="bg-white p-2 rounded small mb-2 border"><code>{{ problem.sample_input }}</code></pre>
+                            <h6 class="fw-bold mb-1 small text-uppercase">Sample Output</h6>
+                            <pre class="bg-white p-2 rounded small mb-0 border"><code>{{ problem.sample_output }}</code></pre>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if problem.constraints %}
+                    <h6 class="fw-bold mb-1 text-secondary small text-uppercase">Constraints</h6>
+                    <pre class="bg-light p-2 rounded small mb-3">{{ problem.constraints }}</pre>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- In-Browser Code Editor & Runner Column -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-terminal"></i>
+                        <span class="fw-semibold small">Python 3 Solution</span>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-light" id="run-code-btn">
+                            <i class="bi bi-play-fill me-1"></i> Run Code
+                        </button>
+                        <button type="submit" form="submit-code-form" class="btn btn-sm btn-success fw-semibold">
+                            <i class="bi bi-cloud-upload me-1"></i> Submit Solution
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body p-0 d-flex flex-column">
+                    <form id="submit-code-form" method="POST" action="{{ url_for('coding.submit_code', slug=problem.slug) }}" class="flex-grow-1 d-flex flex-column">
+                        <input type="hidden" name="language" value="python">
+                        <textarea id="code-editor" name="code" class="code-editor-area flex-grow-1" spellcheck="false">{{ code or problem.starter_code }}</textarea>
+                    </form>
+
+                    <!-- Real-Time Run Output Area -->
+                    <div id="code-output-container" class="p-3 border-top bg-light d-none" style="min-height: 180px;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="fw-bold mb-0 small text-uppercase">Execution Output</h6>
+                            <span id="output-status" class="badge bg-secondary">Pending</span>
+                        </div>
+                        <div id="output-details" class="small"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/coding.js') }}"></script>
+{% endblock %}

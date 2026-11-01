@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Aptitude Practice Mode - PlacementAI{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Aptitude Interactive Practice</h3>
+            <p class="text-secondary small mb-0">Learn at your own pace. Select an option and view detailed step-by-step solutions instantly.</p>
+        </div>
+        <a href="{{ url_for('aptitude.index') }}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Aptitude Home
+        </a>
+    </div>
+
+    <!-- Filters Row -->
+    <div class="card mb-4 bg-light border">
+        <div class="card-body py-3">
+            <form method="GET" action="{{ url_for('aptitude.practice') }}" class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <label class="fw-semibold small">Topic:</label>
+                </div>
+                <div class="col-auto">
+                    <select name="sub" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="all" {% if selected_sub == 'all' %}selected{% endif %}>All Aptitude Topics</option>
+                        <option value="quantitative" {% if selected_sub == 'quantitative' %}selected{% endif %}>Quantitative Aptitude</option>
+                        <option value="logical" {% if selected_sub == 'logical' %}selected{% endif %}>Logical Reasoning</option>
+                        <option value="verbal" {% if selected_sub == 'verbal' %}selected{% endif %}>Verbal Ability</option>
+                    </select>
+                </div>
+
+                <div class="col-auto">
+                    <label class="fw-semibold small">Difficulty:</label>
+                </div>
+                <div class="col-auto">
+                    <select name="difficulty" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="all" {% if selected_diff == 'all' %}selected{% endif %}>All Difficulties</option>
+                        <option value="easy" {% if selected_diff == 'easy' %}selected{% endif %}>Easy</option>
+                        <option value="medium" {% if selected_diff == 'medium' %}selected{% endif %}>Medium</option>
+                        <option value="hard" {% if selected_diff == 'hard' %}selected{% endif %}>Hard</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Practice Questions List -->
+    {% if questions %}
+        {% for q in questions %}
+        <div class="card mb-3 shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center py-2">
+                <span class="fw-bold text-primary">Question #{{ loop.index }}</span>
+                <div>
+                    <span class="badge bg-light text-dark border me-1">{{ q.subcategory }}</span>
+                    <span class="badge bg-{{ 'success' if q.difficulty == 'easy' else ('warning' if q.difficulty == 'medium' else 'danger') }}">
+                        {{ q.difficulty | capitalize }}
+                    </span>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="fs-6 fw-medium mb-3">{{ q.question_text }}</p>
+
+                <div class="row g-2 mb-3">
+                    <div class="col-md-6">
+                        <div class="p-2 border rounded-3 bg-light"><strong>A.</strong> {{ q.option_a }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-2 border rounded-3 bg-light"><strong>B.</strong> {{ q.option_b }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-2 border rounded-3 bg-light"><strong>C.</strong> {{ q.option_c }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-2 border rounded-3 bg-light"><strong>D.</strong> {{ q.option_d }}</div>
+                    </div>
+                </div>
+
+                <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#explanation-{{ q.id }}">
+                    <i class="bi bi-eye me-1"></i> Reveal Answer & Explanation
+                </button>
+
+                <div class="collapse mt-3" id="explanation-{{ q.id }}">
+                    <div class="alert alert-success py-2 mb-0">
+                        <div class="fw-bold mb-1"><i class="bi bi-check-circle-fill me-1"></i> Correct Answer: Option {{ q.correct_option }}</div>
+                        <p class="mb-0 small text-secondary"><strong>Explanation:</strong> {{ q.explanation or 'No detailed explanation provided.' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="card p-5 text-center text-muted">
+            <i class="bi bi-inbox fs-1 mb-2"></i>
+            <h5>No questions match your current filters.</h5>
+            <p class="small mb-0">Try selecting 'All Topics' or 'All Difficulties'.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Resume for AI Evaluation - PlacementAI{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white p-4 border-bottom">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="stat-icon bg-warning text-white">
+                            <i class="bi bi-file-earmark-arrow-up"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-0">Upload Resume for AI ATS Evaluation</h4>
+                            <p class="text-secondary small mb-0">Member 2: Om Badhe &bull; NLP Text Extraction & Skill Benchmark Matching</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('resume.upload') }}" enctype="multipart/form-data">
+                        <!-- Role Target -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Select Target Placement Role *</label>
+                            <select name="target_role" class="form-select form-select-lg" required>
+                                {% for r in roles %}
+                                <option value="{{ r }}" {% if r == (current_user.target_role or 'Software Engineer') %}selected{% endif %}>
+                                    {{ r }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <small class="text-muted">The AI compares your resume skills against required industry benchmarks for this specific role.</small>
+                        </div>
+
+                        <!-- File Input -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Select Resume Document (PDF, DOCX, TXT) *</label>
+                            <input type="file" name="resume" class="form-control form-control-lg" accept=".pdf,.docx,.txt" required>
+                            <div class="form-text mt-2">
+                                <i class="bi bi-info-circle me-1"></i> Supports PDF (.pdf), Microsoft Word (.docx), and plain text (.txt) up to 16 MB.
+                            </div>
+                        </div>
+
+                        <!-- Tips Box -->
+                        <div class="alert alert-info py-3 mb-4">
+                            <h6 class="fw-bold mb-1"><i class="bi bi-lightbulb-fill text-warning me-1"></i> Tips for Top ATS Score:</h6>
+                            <ul class="small mb-0 ps-3">
+                                <li>Include standard sections: Education, Projects, Skills, and Certifications.</li>
+                                <li>Start bullet points with strong action verbs (Developed, Implemented, Engineered, Optimized).</li>
+                                <li>Mention concrete technologies (e.g. Python, SQL, Docker, React, Git).</li>
+                            </ul>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center pt-2">
+                            <a href="{{ url_for('resume.index') }}" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary btn-lg px-4 fw-semibold">
+                                <i class="bi bi-magic me-1"></i> Analyze Resume with AI
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Mock Assessment: {{ test.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+    <!-- Sticky Assessment Header -->
+    <div class="card mb-4 bg-white shadow-sm border-0 sticky-top" style="top: 60px; z-index: 1020;">
+        <div class="card-body py-3 d-flex justify-content-between align-items-center">
+            <div>
+                <span class="badge bg-danger mb-1"><i class="bi bi-clock"></i> Timed Simulation</span>
+                <h5 class="fw-bold mb-0">{{ test.title }}</h5>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-end">
+                    <small class="text-uppercase text-secondary fw-semibold">Countdown</small>
+                    <div id="timer-display" data-duration="{{ test.duration_minutes }}" class="fs-4 fw-bold text-danger font-monospace">
+                        {{ test.duration_minutes }}:00
+                    </div>
+                </div>
+                <button type="submit" form="test-form" class="btn btn-danger fw-semibold px-4" onclick="return confirm('Submit your placement mock test now?')">
+                    <i class="bi bi-send-check me-1"></i> Submit Assessment
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <form id="test-form" method="POST" action="{{ url_for('mock_test.submit_test', test_id=test.id) }}">
+        <input type="hidden" name="time_taken" id="time-taken-input" value="0">
+
+        <div class="row g-4">
+            <div class="col-lg-9">
+                {% for q in questions %}
+                <div class="card mb-4 shadow-sm" id="question-card-{{ q.id }}">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center py-2">
+                        <span class="fw-bold text-primary">Question {{ loop.index }} of {{ questions | length }}</span>
+                        <span class="badge bg-light text-dark border text-uppercase">{{ q.category }} - {{ q.subcategory }}</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="fs-6 fw-medium mb-3">{{ q.question_text }}</p>
+
+                        <div class="vstack gap-2">
+                            <label class="p-3 border rounded-3 d-flex align-items-center gap-3 cursor-pointer hover-bg-light">
+                                <input type="radio" class="form-check-input question-option-input" name="q_{{ q.id }}" value="A" data-question-id="{{ q.id }}">
+                                <span><strong>A.</strong> {{ q.option_a }}</span>
+                            </label>
+
+                            <label class="p-3 border rounded-3 d-flex align-items-center gap-3 cursor-pointer hover-bg-light">
+                                <input type="radio" class="form-check-input question-option-input" name="q_{{ q.id }}" value="B" data-question-id="{{ q.id }}">
+                                <span><strong>B.</strong> {{ q.option_b }}</span>
+                            </label>
+
+                            <label class="p-3 border rounded-3 d-flex align-items-center gap-3 cursor-pointer hover-bg-light">
+                                <input type="radio" class="form-check-input question-option-input" name="q_{{ q.id }}" value="C" data-question-id="{{ q.id }}">
+                                <span><strong>C.</strong> {{ q.option_c }}</span>
+                            </label>
+
+                            <label class="p-3 border rounded-3 d-flex align-items-center gap-3 cursor-pointer hover-bg-light">
+                                <input type="radio" class="form-check-input question-option-input" name="q_{{ q.id }}" value="D" data-question-id="{{ q.id }}">
+                                <span><strong>D.</strong> {{ q.option_d }}</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Question Palette Sidebar -->
+            <div class="col-lg-3">
+                <div class="card sticky-top" style="top: 150px;">
+                    <div class="card-header bg-white py-2">
+                        <span class="fw-bold small"><i class="bi bi-grid-3x3-gap-fill me-1"></i> Question Palette</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap">
+                            {% for q in questions %}
+                            <a href="#question-card-{{ q.id }}" id="palette-btn-{{ q.id }}" class="btn btn-outline-secondary palette-btn btn-sm">
+                                {{ loop.index }}
+                            </a>
+                            {% endfor %}
+                        </div>
+
+                        <hr>
+                        <div class="small">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="badge bg-primary" style="width: 14px; height: 14px; padding: 0;"></span> Answered
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-secondary" style="width: 14px; height: 14px; padding: 0;"></span> Not Answered
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/test.js') }}"></script>
+{% endblock %}

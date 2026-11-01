@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}AI Mock Interview Simulator - PlacementAI{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">AI Mock Interview Simulator</h3>
+            <p class="text-secondary small mb-0">Experience realistic campus placement interview rounds with real-time AI scoring on communication, technical depth, and confidence</p>
+        </div>
+        <a href="{{ url_for('student.dashboard') }}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Dashboard
+        </a>
+    </div>
+
+    <!-- Start New Interview Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-primary">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="stat-icon bg-primary text-white">
+                            <i class="bi bi-cpu-fill"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-0">Technical Interview Round</h4>
+                            <small class="text-muted">OOP, Data Structures, DBMS, OS & Networks</small>
+                        </div>
+                    </div>
+                    <p class="text-secondary small mb-4">
+                        Simulates the technical screening round conducted by technical leads and engineering managers. Test your conceptual clarity and architectural explanation skills.
+                    </p>
+
+                    <form method="POST" action="{{ url_for('interview.start_interview') }}" class="mt-auto">
+                        <input type="hidden" name="interview_type" value="technical">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Target Job Role</label>
+                            <input type="text" name="target_role" class="form-control form-control-sm" value="{{ current_user.target_role or 'Software Engineer' }}" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-play-circle me-1"></i> Start Technical Interview
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-success">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="stat-icon bg-success text-white">
+                            <i class="bi bi-person-video3"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-0">HR & Behavioral Round</h4>
+                            <small class="text-muted">STAR Method, Culture Fit & Communication</small>
+                        </div>
+                    </div>
+                    <p class="text-secondary small mb-4">
+                        Simulates the human resources round focused on communication, team collaboration, leadership, problem handling, and self-awareness.
+                    </p>
+
+                    <form method="POST" action="{{ url_for('interview.start_interview') }}" class="mt-auto">
+                        <input type="hidden" name="interview_type" value="hr">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Target Job Role</label>
+                            <input type="text" name="target_role" class="form-control form-control-sm" value="{{ current_user.target_role or 'Software Engineer' }}" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="bi bi-play-circle me-1"></i> Start HR Interview
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Past Interview Sessions -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white py-3">
+            <h5 class="fw-bold mb-0"><i class="bi bi-clock-history me-2"></i>Past Interview Evaluations</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light small">
+                        <tr>
+                            <th>Date</th>
+                            <th>Round Type</th>
+                            <th>Target Role</th>
+                            <th>Overall Score</th>
+                            <th>Technical Depth</th>
+                            <th>Communication</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if past_sessions %}
+                            {% for s in past_sessions %}
+                            <tr>
+                                <td>{{ s.created_at.strftime('%Y-%m-%d %H:%M') if s.created_at else 'Recent' }}</td>
+                                <td><span class="badge bg-{{ 'primary' if s.interview_type == 'technical' else 'success' }} text-uppercase">{{ s.interview_type }}</span></td>
+                                <td>{{ s.target_role }}</td>
+                                <td><strong>{{ s.overall_score }}%</strong></td>
+                                <td>{{ s.technical_score }}%</td>
+                                <td>{{ s.communication_score }}%</td>
+                                <td>
+                                    <a href="{{ url_for('interview.feedback_view', session_id=s.id) }}" class="btn btn-sm btn-outline-primary">
+                                        View Feedback
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center py-4 text-muted">No mock interview sessions recorded yet. Start your first session above!</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+@media (max-width: 991.98px) {
+    .dashboard-hero {
+        padding: 1.5rem;
+    }
+    
+    .readiness-gauge {
+        margin-top: 1.5rem;
+    }
+
+    .code-editor-area {
+        min-height: 250px;
+    }
+
+    .chat-bubble {
+        max-width: 95%;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .readiness-score {
+        font-size: 2.2rem;
+    }
+
+    .palette-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+    }
+}

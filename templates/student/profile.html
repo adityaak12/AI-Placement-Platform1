@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - PlacementAI{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white p-3 border-bottom">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-person-gear text-primary me-2"></i>Edit Student Profile</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('student.profile') }}">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Full Name</label>
+                                <input type="text" class="form-control" name="name" value="{{ user.name }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Email Address (Read-only)</label>
+                                <input type="email" class="form-control bg-light" value="{{ user.email }}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">College / Institute</label>
+                                <input type="text" class="form-control" name="college" value="{{ user.college or '' }}" placeholder="College name">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Degree / Branch</label>
+                                <input type="text" class="form-control" name="degree" value="{{ user.degree or '' }}" placeholder="e.g. B.Tech Computer Engineering">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Graduation Year</label>
+                                <input type="number" class="form-control" name="graduation_year" value="{{ user.graduation_year or '' }}" min="2020" max="2035">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Target Job Role</label>
+                                <select class="form-select" name="target_role">
+                                    <option value="Software Engineer" {% if user.target_role == 'Software Engineer' %}selected{% endif %}>Software Engineer / SDE</option>
+                                    <option value="Full Stack Developer" {% if user.target_role == 'Full Stack Developer' %}selected{% endif %}>Full Stack Developer</option>
+                                    <option value="Frontend Developer" {% if user.target_role == 'Frontend Developer' %}selected{% endif %}>Frontend Developer</option>
+                                    <option value="Backend Developer" {% if user.target_role == 'Backend Developer' %}selected{% endif %}>Backend Developer</option>
+                                    <option value="Data Analyst" {% if user.target_role == 'Data Analyst' %}selected{% endif %}>Data Analyst</option>
+                                    <option value="Cloud / DevOps Engineer" {% if user.target_role == 'Cloud / DevOps Engineer' %}selected{% endif %}>Cloud / DevOps Engineer</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Technical Skills (Comma separated)</label>
+                                <input type="text" class="form-control" name="skills" value="{{ user.skills or '' }}" placeholder="Python, Java, React, SQL, Git">
+                                <small class="text-muted">Used by the recommendation engine and interview simulator to tailor questions.</small>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Career Bio / Objectives</label>
+                                <textarea class="form-control" name="bio" rows="3" placeholder="Brief summary of your academic projects and career objectives...">{{ user.bio or '' }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-top d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary px-4 fw-semibold">
+                                <i class="bi bi-save me-1"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

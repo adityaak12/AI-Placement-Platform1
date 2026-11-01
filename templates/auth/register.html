@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Student Registration - AI Placement Preparation Platform{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4 p-lg-5">
+                    <div class="text-center mb-4">
+                        <div class="stat-icon bg-primary text-white mx-auto mb-3">
+                            <i class="bi bi-person-plus-fill"></i>
+                        </div>
+                        <h3 class="fw-bold">Student Registration</h3>
+                        <p class="text-secondary small">Create your student account to unlock assessments, coding, and AI tools</p>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('auth.register') }}">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label fw-semibold">Full Name *</label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="e.g. Aditya Madne" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label fw-semibold">Email Address *</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="student@example.com" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="password" class="form-label fw-semibold">Password *</label>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="At least 6 characters" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="confirm_password" class="form-label fw-semibold">Confirm Password *</label>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Re-enter password" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="college" class="form-label fw-semibold">College / University</label>
+                                <input type="text" class="form-control" id="college" name="college" placeholder="e.g. Government Engineering College">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="degree" class="form-label fw-semibold">Degree / Branch</label>
+                                <input type="text" class="form-control" id="degree" name="degree" placeholder="e.g. B.Tech Computer Engineering">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="graduation_year" class="form-label fw-semibold">Graduation Year</label>
+                                <input type="number" class="form-control" id="graduation_year" name="graduation_year" placeholder="2026" min="2020" max="2035">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="target_role" class="form-label fw-semibold">Target Job Role</label>
+                                <select class="form-select" id="target_role" name="target_role">
+                                    <option value="Software Engineer" selected>Software Engineer / SDE</option>
+                                    <option value="Full Stack Developer">Full Stack Developer</option>
+                                    <option value="Frontend Developer">Frontend Developer</option>
+                                    <option value="Backend Developer">Backend Developer</option>
+                                    <option value="Data Analyst">Data Analyst</option>
+                                    <option value="Cloud / DevOps Engineer">Cloud / DevOps Engineer</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                                <i class="bi bi-check-circle me-1"></i> Complete Registration
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-4 pt-2">
+                        <p class="text-muted small mb-0">Already registered? <a href="{{ url_for('auth.login') }}" class="fw-semibold text-primary">Log In Here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

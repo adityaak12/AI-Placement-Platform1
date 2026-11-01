@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Administrator Dashboard - PlacementAI{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1"><i class="bi bi-shield-lock-fill text-primary me-2"></i>Campus Placement Cell Admin</h3>
+            <p class="text-secondary small mb-0">System Overview: Registered Candidates, Question Bank, Test Configurations & Student Scores</p>
+        </div>
+        <div>
+            <a href="{{ url_for('admin.questions') }}" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-circle me-1"></i> Add Question
+            </a>
+            <a href="{{ url_for('admin.tests') }}" class="btn btn-outline-primary btn-sm ms-2">
+                <i class="bi bi-plus-circle me-1"></i> Create Test
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-2 col-sm-4 col-6">
+            <div class="stat-card text-center">
+                <span class="text-muted small text-uppercase">Students</span>
+                <h3 class="fw-bold text-primary my-1">{{ total_students }}</h3>
+                <small class="text-muted">Registered</small>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-4 col-6">
+            <div class="stat-card text-center">
+                <span class="text-muted small text-uppercase">Questions</span>
+                <h3 class="fw-bold text-success my-1">{{ total_questions }}</h3>
+                <small class="text-muted">In Repository</small>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-4 col-6">
+            <div class="stat-card text-center">
+                <span class="text-muted small text-uppercase">Tests</span>
+                <h3 class="fw-bold text-info my-1">{{ total_tests }}</h3>
+                <small class="text-muted">Published</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 col-6">
+            <div class="stat-card text-center">
+                <span class="text-muted small text-uppercase">Test Submissions</span>
+                <h3 class="fw-bold text-warning my-1">{{ total_results }}</h3>
+                <small class="text-muted">Written Tests Taken</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 col-6">
+            <div class="stat-card text-center">
+                <span class="text-muted small text-uppercase">Coding Runs</span>
+                <h3 class="fw-bold text-danger my-1">{{ total_coding }}</h3>
+                <small class="text-muted">Submissions Evaluated</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Management Tables -->
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-people me-2"></i>Recently Registered Candidates</h6>
+                    <a href="{{ url_for('admin.students') }}" class="small text-decoration-none">View All Students</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 small">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>College / Branch</th>
+                                    <th>Target Role</th>
+                                    <th>Joined</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if recent_students %}
+                                    {% for s in recent_students %}
+                                    <tr>
+                                        <td><strong>{{ s.name }}</strong><br><span class="text-muted">{{ s.email }}</span></td>
+                                        <td>{{ s.college or 'N/A' }}<br><span class="text-muted">{{ s.degree or '' }}</span></td>
+                                        <td><span class="badge bg-light text-dark border">{{ s.target_role }}</span></td>
+                                        <td>{{ s.created_at.strftime('%Y-%m-%d') if s.created_at else 'Recent' }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr><td colspan="4" class="text-center py-3 text-muted">No students registered yet.</td></tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-trophy me-2"></i>Latest Candidate Test Submissions</h6>
+                    <a href="{{ url_for('admin.results') }}" class="small text-decoration-none">View All Results</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 small">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Test</th>
+                                    <th>Score</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if recent_results %}
+                                    {% for r in recent_results %}
+                                    <tr>
+                                        <td><strong>{{ r.student.name if r.student else 'Candidate' }}</strong></td>
+                                        <td>{{ r.test.title if r.test else r.category }}</td>
+                                        <td><strong>{{ r.score }}</strong> / {{ r.total_marks }} ({{ r.percentage }}%)</td>
+                                        <td>
+                                            <span class="badge bg-{{ 'success' if r.passed else 'danger' }}">
+                                                {{ 'Passed' if r.passed else 'Failed' }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr><td colspan="4" class="text-center py-3 text-muted">No submissions recorded yet.</td></tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
